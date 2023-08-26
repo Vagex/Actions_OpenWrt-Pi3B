@@ -136,8 +136,9 @@ jobs:
     - name: 发布固件
       uses: ncipollo/release-action@v1
       with:
-        tag: Amlogic_Openwrt_N1_${{ env.PACKAGED_OUTPUTDATE }}
-        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
+        tag: Openwrt_Pi3B4B_${{ env.PACKAGED_OUTPUTDATE }}
+        # artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
+        artifacts: /workdir/upload/*
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
         body: |
@@ -147,7 +148,7 @@ jobs:
             Default username: root
             Default password: password
             Default WIFI name: OpenWrt
-            Default WIFI password: none
+            Default WIFI password: none             
 
     - name: 清理Actions空间
       uses: Mattraks/delete-workflow-runs@main
