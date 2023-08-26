@@ -39,11 +39,11 @@ jobs:
         remove-haskell: 'true'
         remove-codeql: 'true'
         remove-docker-images: 'true'
-    
+        
     - name: Checkout
       uses: actions/checkout@v3
 
-      - name: 检查服务器配置
+    - name: 检查服务器配置
       run: |
         echo "警告⚠"
         echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
@@ -149,11 +149,7 @@ jobs:
             Default WIFI name: OpenWrt
             Default WIFI password: none
 
-
-
-
-
-      - name: 清理Actions空间
+    - name: 清理Actions空间
       uses: Mattraks/delete-workflow-runs@main
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
