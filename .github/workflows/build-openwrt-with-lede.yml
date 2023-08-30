@@ -171,24 +171,22 @@ jobs:
         echo "RELEASE_TAG=$(TZ=UTC-8 date +"%Y-%m-%d")" >> $GITHUB_ENV
         echo "::set-output name=status::success"
     
-    # 发行固件
-    - name: Upload Firmware To Release
-      uses: softprops/action-gh-release@master
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: 发布固件
+      uses: ncipollo/release-action@v1
       with:
-        name: Pi3B ${{ env.BRANCH }} 🚀 | 自动编译 / ${{ env.RELEASE_TAG }}
-        tag_name: ${{ env.RELEASE_TAG }}
-        body: |            
-          This is OpenWrt firmware for Pi3/Pi4 系列
+        tag: Amlogic_Openwrt_N1_${{ env.PACKAGED_OUTPUTDATE }}
+        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          This is OpenWrt firmware for Amlogic s9xxx tv box
             * Firmware information
             Default IP: 192.168.1.254
             Default username: root
             Default password: password
             Default WIFI name: OpenWrt
-            Default WIFI password: none      
-        files: ${{ env.FIRMWARE }}/*
+            Default WIFI password: none
+            Install to EMMC: Login to OpenWrt → System → Amlogic Service → Install OpenWrt
 
     - name: 清理Actions空间
       uses: Mattraks/delete-workflow-runs@main
