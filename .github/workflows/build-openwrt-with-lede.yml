@@ -146,21 +146,16 @@ jobs:
         echo "RELEASE_TAG=$(TZ=UTC-8 date +"%Y-%m-%d")" >> $GITHUB_ENV
         echo "::set-output name=status::success"
     
-    - name: 发布固件
-      if: steps.generate.outputs.status == 'success' && env.FIRMWARE_RELEASE == 'true'
-      uses: ncipollo/release-action@main
+    # 发布固件
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }}
-        allowUpdates: true
-        tag: ${{ env.FIRMWARE_TAG }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: ${{ env.FIRMWARE_PATH }}/*
-        body: |
-          **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
-          * 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
-          默认 IP：192.168.1.1 默认密码：password
-          当前使用版本:【编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录】
-          ${{ env.VERSION_INFO }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
 
     - name: 清理Actions空间
       uses: Mattraks/delete-workflow-runs@main
